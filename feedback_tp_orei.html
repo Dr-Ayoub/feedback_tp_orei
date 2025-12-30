@@ -782,6 +782,7 @@
     </div>
     
     <script>
+        const STATIC_DB_ENDPOINT = '';
         const allowedEmails = new Set([
             'yasser.aboulhaoul@artsetmetiers.ma',
             'bouchaib.achadini@artsetmetiers.ma',
@@ -857,7 +858,6 @@
             }
             
             data.timestamp = new Date().toISOString();
-            
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -868,7 +868,18 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            alert('✅ Merci pour votre feedback!\n\nVos réponses ont été enregistrées de manière anonyme.');
+            if (STATIC_DB_ENDPOINT) {
+                fetch(STATIC_DB_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(() => {
+                    alert('⚠️ Le feedback a été téléchargé, mais l’envoi vers la base statique a échoué.');
+                });
+            } else {
+                alert('✅ Merci pour votre feedback!\n\nVos réponses ont été téléchargées. Configurez STATIC_DB_ENDPOINT pour enregistrer aussi dans une base statique.');
+            }
+            
             this.reset();
         });
     </script>
