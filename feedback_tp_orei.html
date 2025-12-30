@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback TP OREI - Arts et Métiers</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #2d3748;
+            --secondary: #4a5568;
+            --accent: #ed8936;
+            --success: #48bb78;
+            --background: #f7fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #2d3748;
+            --text-light: #718096;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 780px;
+            margin: 40px auto;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            padding: 50px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(237, 137, 54, 0.1);
+            border-radius: 50%;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 16px;
+            max-width: 500px;
+        }
+        
+        .form-content {
+            padding: 50px 40px;
+        }
+        
+        .alert {
+            background: linear-gradient(135deg, #fed7aa 0%, #feebc8 100%);
+            border-left: 4px solid var(--accent);
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .alert-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: #7c2d12;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .alert-title::before {
+            content: '🔒';
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .alert-text {
+            color: #9a3412;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .section-divider {
+            margin: 50px 0 30px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-emoji {
+            font-size: 24px;
+        }
+        
+        .question {
+            margin-bottom: 32px;
+        }
+        
+        .question-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 14px;
+        }
+        
+        .required {
+            color: #e53e3e;
+            margin-left: 4px;
+        }
+        
+        .question-help {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(237, 137, 54, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+            line-height: 1.6;
+        }
+        
+        .scale-wrapper {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid var(--border);
+        }
+        
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .scale-options {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .scale-item {
+            position: relative;
+            flex: 1;
+            max-width: 60px;
+        }
+        
+        .scale-item input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .scale-box {
+            display: block;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .scale-item input[type="radio"]:hover + .scale-box {
+            border-color: var(--accent);
+            background: #fffaf0;
+        }
+        
+        .scale-item input[type="radio"]:checked + .scale-box {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .radio-group,
+        .checkbox-group {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .option {
+            position: relative;
+        }
+        
+        .option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+        
+        .option input:hover + .option-label {
+            border-color: var(--accent);
+            background: #fffaf0;
+        }
+        
+        .option input:checked + .option-label {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #fffaf0 0%, #feebc8 100%);
+            font-weight: 500;
+        }
+        
+        .option-icon {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+        
+        .submit-wrapper {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--accent) 0%, #dd6b20 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(237, 137, 54, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(237, 137, 54, 0.5);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+            }
+            
+            .header {
+                padding: 40px 30px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .form-content {
+                padding: 40px 30px;
+            }
+            
+            .scale-options {
+                gap: 6px;
+            }
+            
+            .scale-box {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">Arts et Métiers</div>
+                <h1>Feedback TP OREI</h1>
+                <p>Votre avis compte pour améliorer l'expérience d'apprentissage en Gestion de Production</p>
+            </div>
+        </div>
+        
+        <div class="form-content">
+            <div class="alert">
+                <div class="alert-title">Réponses anonymes</div>
+                <div class="alert-text">
+                    Votre email est demandé uniquement pour éviter les doublons. Vos réponses ne seront jamais associées à votre identité dans les analyses.
+                </div>
+            </div>
+            
+            <form id="feedbackForm">
+                <div class="question">
+                    <label class="question-label">
+                        Adresse email Arts et Métiers <span class="required">*</span>
+                    </label>
+                    <input type="email" name="email" required 
+                           placeholder="prenom.nom@artsetmetiers.ma"
+                           pattern=".+@artsetmetiers\.ma">
+                    <div class="question-help">Utilisez votre adresse @artsetmetiers.ma</div>
+                </div>
+                
+                <div class="section-divider">
+                    <div class="section-title">
+                        <span class="section-emoji">📋</span>
+                        Organisation du TP
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Les consignes du TP étaient-elles claires ? <span class="required">*</span>
+                    </label>
+                    <div class="scale-wrapper">
+                        <div class="scale-labels">
+                            <span>Pas claires</span>
+                            <span>Très claires</span>
+                        </div>
+                        <div class="scale-options">
+                            <div class="scale-item">
+                                <input type="radio" name="clarte_consignes" value="1" id="c1" required>
+                                <label for="c1" class="scale-box">1</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="clarte_consignes" value="2" id="c2">
+                                <label for="c2" class="scale-box">2</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="clarte_consignes" value="3" id="c3">
+                                <label for="c3" class="scale-box">3</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="clarte_consignes" value="4" id="c4">
+                                <label for="c4" class="scale-box">4</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="clarte_consignes" value="5" id="c5">
+                                <label for="c5" class="scale-box">5</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        La durée du TP était-elle adaptée ? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="option">
+                            <input type="radio" name="duree" value="Trop court" id="d1" required>
+                            <label for="d1" class="option-label">
+                                <span class="option-icon">⏱️</span>
+                                Trop court - Pas assez de temps
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="duree" value="Parfait" id="d2">
+                            <label for="d2" class="option-label">
+                                <span class="option-icon">✅</span>
+                                Parfait - Temps bien calibré
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="duree" value="Trop long" id="d3">
+                            <label for="d3" class="option-label">
+                                <span class="option-icon">⏰</span>
+                                Trop long - Moments d'attente
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Le matériel était-il adapté ? <span class="required">*</span>
+                    </label>
+                    <div class="scale-wrapper">
+                        <div class="scale-labels">
+                            <span>Inadapté</span>
+                            <span>Excellent</span>
+                        </div>
+                        <div class="scale-options">
+                            <div class="scale-item">
+                                <input type="radio" name="materiel" value="1" id="m1" required>
+                                <label for="m1" class="scale-box">1</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="materiel" value="2" id="m2">
+                                <label for="m2" class="scale-box">2</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="materiel" value="3" id="m3">
+                                <label for="m3" class="scale-box">3</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="materiel" value="4" id="m4">
+                                <label for="m4" class="scale-box">4</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="materiel" value="5" id="m5">
+                                <label for="m5" class="scale-box">5</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-divider">
+                    <div class="section-title">
+                        <span class="section-emoji">🎯</span>
+                        Objectifs Pédagogiques
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Avez-vous compris les objectifs pédagogiques ? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="option">
+                            <input type="radio" name="objectifs" value="Pas du tout" id="o1" required>
+                            <label for="o1" class="option-label">
+                                <span class="option-icon">❌</span>
+                                Pas du tout clair
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="objectifs" value="Partiellement" id="o2">
+                            <label for="o2" class="option-label">
+                                <span class="option-icon">⚠️</span>
+                                Partiellement compris
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="objectifs" value="Plutôt bien" id="o3">
+                            <label for="o3" class="option-label">
+                                <span class="option-icon">👍</span>
+                                Plutôt bien compris
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="objectifs" value="Parfaitement" id="o4">
+                            <label for="o4" class="option-label">
+                                <span class="option-icon">✅</span>
+                                Parfaitement compris
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Compétences développées (plusieurs choix possibles)
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="option">
+                            <input type="checkbox" name="competences" value="Lean Manufacturing" id="comp1">
+                            <label for="comp1" class="option-label">
+                                <span class="option-icon">🏭</span>
+                                Lean Manufacturing
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="competences" value="Analyse de flux" id="comp2">
+                            <label for="comp2" class="option-label">
+                                <span class="option-icon">📊</span>
+                                Analyse de flux
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="competences" value="Travail équipe" id="comp3">
+                            <label for="comp3" class="option-label">
+                                <span class="option-icon">👥</span>
+                                Travail en équipe
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="competences" value="Résolution problèmes" id="comp4">
+                            <label for="comp4" class="option-label">
+                                <span class="option-icon">🔧</span>
+                                Résolution de problèmes
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="competences" value="Mesure indicateurs" id="comp5">
+                            <label for="comp5" class="option-label">
+                                <span class="option-icon">📈</span>
+                                Mesure d'indicateurs
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-divider">
+                    <div class="section-title">
+                        <span class="section-emoji">👥</span>
+                        Travail en Équipe
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Taille des équipes (5-7 personnes) adaptée ? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="option">
+                            <input type="radio" name="taille" value="Trop petit" id="t1" required>
+                            <label for="t1" class="option-label">
+                                <span class="option-icon">👤</span>
+                                Trop petit
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="taille" value="Parfait" id="t2">
+                            <label for="t2" class="option-label">
+                                <span class="option-icon">✅</span>
+                                Parfait
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="taille" value="Trop grand" id="t3">
+                            <label for="t3" class="option-label">
+                                <span class="option-icon">👥</span>
+                                Trop grand
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Collaboration au sein de l'équipe ? <span class="required">*</span>
+                    </label>
+                    <div class="scale-wrapper">
+                        <div class="scale-labels">
+                            <span>Mauvaise</span>
+                            <span>Excellente</span>
+                        </div>
+                        <div class="scale-options">
+                            <div class="scale-item">
+                                <input type="radio" name="collaboration" value="1" id="col1" required>
+                                <label for="col1" class="scale-box">1</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="collaboration" value="2" id="col2">
+                                <label for="col2" class="scale-box">2</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="collaboration" value="3" id="col3">
+                                <label for="col3" class="scale-box">3</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="collaboration" value="4" id="col4">
+                                <label for="col4" class="scale-box">4</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="collaboration" value="5" id="col5">
+                                <label for="col5" class="scale-box">5</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-divider">
+                    <div class="section-title">
+                        <span class="section-emoji">📝</span>
+                        Évaluation
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Critères d'évaluation clairs ? <span class="required">*</span>
+                    </label>
+                    <div class="scale-wrapper">
+                        <div class="scale-labels">
+                            <span>Pas clairs</span>
+                            <span>Très clairs</span>
+                        </div>
+                        <div class="scale-options">
+                            <div class="scale-item">
+                                <input type="radio" name="criteres" value="1" id="cr1" required>
+                                <label for="cr1" class="scale-box">1</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="criteres" value="2" id="cr2">
+                                <label for="cr2" class="scale-box">2</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="criteres" value="3" id="cr3">
+                                <label for="cr3" class="scale-box">3</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="criteres" value="4" id="cr4">
+                                <label for="cr4" class="scale-box">4</label>
+                            </div>
+                            <div class="scale-item">
+                                <input type="radio" name="criteres" value="5" id="cr5">
+                                <label for="cr5" class="scale-box">5</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Charge de travail (rapport + Kaizen) ? <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="option">
+                            <input type="radio" name="charge" value="Trop faible" id="ch1" required>
+                            <label for="ch1" class="option-label">
+                                <span class="option-icon">⬇️</span>
+                                Trop faible
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="charge" value="Raisonnable" id="ch2">
+                            <label for="ch2" class="option-label">
+                                <span class="option-icon">✅</span>
+                                Raisonnable
+                            </label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="charge" value="Trop élevée" id="ch3">
+                            <label for="ch3" class="option-label">
+                                <span class="option-icon">⬆️</span>
+                                Trop élevée
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-divider">
+                    <div class="section-title">
+                        <span class="section-emoji">💭</span>
+                        Votre Feedback
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Points positifs du TP
+                    </label>
+                    <textarea name="positifs" placeholder="Ce qui a bien fonctionné selon vous..."></textarea>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Points à améliorer <span class="required">*</span>
+                    </label>
+                    <textarea name="ameliorer" required placeholder="Vos suggestions concrètes d'amélioration..."></textarea>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Suggestions complémentaires
+                    </label>
+                    <textarea name="suggestions" placeholder="Autres idées pour améliorer ce TP..."></textarea>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Note globale du TP <span class="required">*</span>
+                    </label>
+                    <div class="scale-wrapper">
+                        <div class="scale-labels">
+                            <span>0/10</span>
+                            <span>10/10</span>
+                        </div>
+                        <div class="scale-options" style="flex-wrap: wrap;">
+                            <div class="scale-item"><input type="radio" name="note" value="0" id="n0" required><label for="n0" class="scale-box">0</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="1" id="n1"><label for="n1" class="scale-box">1</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="2" id="n2"><label for="n2" class="scale-box">2</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="3" id="n3"><label for="n3" class="scale-box">3</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="4" id="n4"><label for="n4" class="scale-box">4</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="5" id="n5"><label for="n5" class="scale-box">5</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="6" id="n6"><label for="n6" class="scale-box">6</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="7" id="n7"><label for="n7" class="scale-box">7</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="8" id="n8"><label for="n8" class="scale-box">8</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="9" id="n9"><label for="n9" class="scale-box">9</label></div>
+                            <div class="scale-item"><input type="radio" name="note" value="10" id="n10"><label for="n10" class="scale-box">10</label></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="question-label">
+                        Autres commentaires
+                    </label>
+                    <textarea name="commentaires" placeholder="Tout autre commentaire..."></textarea>
+                </div>
+                
+                <div class="submit-wrapper">
+                    <button type="submit" class="submit-btn">Envoyer mes réponses</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            data.timestamp = new Date().toISOString();
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `feedback_${data.email.split('@')[0]}_${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Merci pour votre feedback!\n\nVos réponses ont été enregistrées de manière anonyme.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
