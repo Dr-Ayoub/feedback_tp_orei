@@ -368,8 +368,8 @@
         <div class="form-content">
             <div class="alert">
                 <div class="alert-title">Réponses anonymes</div>
-                <div class="alert-text">
-                    Votre email est demandé uniquement pour éviter les doublons. Vos réponses ne seront jamais associées à votre identité dans les analyses.
+                    <div class="alert-text">
+                    Votre email est demandé uniquement pour éviter les doublons. Seules les adresses autorisées peuvent répondre. Vos réponses ne seront jamais associées à votre identité dans les analyses.
                 </div>
             </div>
             
@@ -381,7 +381,7 @@
                     <input type="email" name="email" required 
                            placeholder="prenom.nom@artsetmetiers.ma"
                            pattern=".+@artsetmetiers\.ma">
-                    <div class="question-help">Utilisez votre adresse @artsetmetiers.ma</div>
+                    <div class="question-help">Utilisez votre adresse @artsetmetiers.ma (liste autorisée uniquement).</div>
                 </div>
                 
                 <div class="section-divider">
@@ -782,8 +782,66 @@
     </div>
     
     <script>
+        const NOTION_WEBHOOK_ENDPOINT = '';
+        const allowedEmails = new Set([
+            'yasser.aboulhaoul@artsetmetiers.ma',
+            'bouchaib.achadini@artsetmetiers.ma',
+            'aya.agoudar@artsetmetiers.ma',
+            'adam.arhbal@artsetmetiers.ma',
+            'mohamed.atarras@artsetmetiers.ma',
+            'ahmed.bouhou@artsetmetiers.ma',
+            'mouad.chatire@artsetmetiers.ma',
+            'mohamed_amine.choukri@artsetmetiers.ma',
+            'imane.elbakkouch@artsetmetiers.ma',
+            'mohamed_amine.el_karmaoui@artsetmetiers.ma',
+            'bachchar.ennhila@artsetmetiers.ma',
+            'yasser.ettabi@artsetmetiers.ma',
+            'zakaria.alifriqui@artsetmetiers.ma',
+            'salma.arabe@artsetmetiers.ma',
+            'talal.ben_el_cadi@artsetmetiers.ma',
+            'fares.benmansour@artsetmetiers.ma',
+            'mohammed_amine.ben_moussa@artsetmetiers.ma',
+            'dimi_zagadou_yann_derrick.bolou@artsetmetiers.ma',
+            'ayoub.bouchaab@artsetmetiers.ma',
+            'chadi.boufadna@artsetmetiers.ma',
+            'nouhaila.charahayne@artsetmetiers.ma',
+            'salma.dada@artsetmetiers.ma',
+            'mustapha.el_baghdadi@artsetmetiers.ma',
+            'nada.el_fellati@artsetmetiers.ma',
+            'ossama.el_ouahabi@artsetmetiers.ma',
+            'yassine.fels@artsetmetiers.ma',
+            'adam.gueznai@artsetmetiers.ma',
+            'alaa_eddine.hanif@artsetmetiers.ma',
+            'youssef.ikradine@artsetmetiers.ma',
+            'yassine.lahlou@artsetmetiers.ma',
+            'othmane.rahel@artsetmetiers.ma',
+            'mouhamed.sall@artsetmetiers.ma',
+            'adam.samodi@artsetmetiers.ma',
+            'abderrahmane.soltani@artsetmetiers.ma',
+            'fatima-ezzahra.talhi@artsetmetiers.ma',
+            'hiba.janjani@artsetmetiers.ma',
+            'omatara_aime.toure@artsetmetiers.ma',
+            'abdelkbir.jaouad@artsetmetiers.ma',
+            'mohamed.jlok@artsetmetiers.ma',
+            'christ_moh_hyemhand_aime_junior.kouame@artsetmetiers.ma',
+            'osama.lahyani@artsetmetiers.ma',
+            'brahim.mekiyine@artsetmetiers.ma',
+            'hamza.mounir@artsetmetiers.ma',
+            'jamal_eddine.mourtafia@artsetmetiers.ma',
+            'douae.rabii@artsetmetiers.ma',
+            'bouchaib.sanie@artsetmetiers.ma',
+            'ayoub.smani@artsetmetiers.ma',
+            'bahae-eddine.soukkane@artsetmetiers.ma',
+            'nomwende_juste_placide.sawadogo@artsetmetiers.ma'
+        ]);
+
         document.getElementById('feedbackForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            const emailValue = this.querySelector('input[name="email"]').value.trim().toLowerCase();
+            if (!allowedEmails.has(emailValue)) {
+                alert('⚠️ Cette adresse email n’est pas autorisée à répondre à ce feedback.');
+                return;
+            }
             const formData = new FormData(this);
             const data = {};
             
@@ -800,19 +858,23 @@
             }
             
             data.timestamp = new Date().toISOString();
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `feedback_${data.email.split('@')[0]}_${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            alert('✅ Merci pour votre feedback!\n\nVos réponses ont été enregistrées de manière anonyme.');
-            this.reset();
+            if (!NOTION_WEBHOOK_ENDPOINT) {
+                alert('⚠️ Le formulaire n’est pas encore connecté à la base Notion.');
+                return;
+            }
+
+            fetch(NOTION_WEBHOOK_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(() => {
+                    alert('✅ Merci pour votre feedback!\n\nVos réponses ont été envoyées.');
+                    this.reset();
+                })
+                .catch(() => {
+                    alert('⚠️ L’envoi vers Notion a échoué. Merci de réessayer plus tard.');
+                });
         });
     </script>
 </body>
