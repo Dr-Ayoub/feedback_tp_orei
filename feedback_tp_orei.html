@@ -782,7 +782,7 @@
     </div>
     
     <script>
-        const STATIC_DB_ENDPOINT = '';
+        const NOTION_WEBHOOK_ENDPOINT = '';
         const allowedEmails = new Set([
             'yasser.aboulhaoul@artsetmetiers.ma',
             'bouchaib.achadini@artsetmetiers.ma',
@@ -858,29 +858,23 @@
             }
             
             data.timestamp = new Date().toISOString();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `feedback_${data.email.split('@')[0]}_${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            if (STATIC_DB_ENDPOINT) {
-                fetch(STATIC_DB_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                }).catch(() => {
-                    alert('⚠️ Le feedback a été téléchargé, mais l’envoi vers la base statique a échoué.');
-                });
-            } else {
-                alert('✅ Merci pour votre feedback!\n\nVos réponses ont été téléchargées. Configurez STATIC_DB_ENDPOINT pour enregistrer aussi dans une base statique.');
+            if (!NOTION_WEBHOOK_ENDPOINT) {
+                alert('⚠️ Le formulaire n’est pas encore connecté à la base Notion.');
+                return;
             }
-            
-            this.reset();
+
+            fetch(NOTION_WEBHOOK_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(() => {
+                    alert('✅ Merci pour votre feedback!\n\nVos réponses ont été envoyées.');
+                    this.reset();
+                })
+                .catch(() => {
+                    alert('⚠️ L’envoi vers Notion a échoué. Merci de réessayer plus tard.');
+                });
         });
     </script>
 </body>
